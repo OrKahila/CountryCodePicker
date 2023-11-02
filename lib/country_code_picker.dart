@@ -1,6 +1,7 @@
 library country_code_picker;
 
 import 'package:collection/collection.dart' show IterableExtension;
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'src/country_code.dart';
@@ -127,7 +128,8 @@ class CountryCodePicker extends StatefulWidget {
     this.dialogBackgroundColor,
     this.closeIcon = const Icon(Icons.close),
     this.countryList = codes,
-    this.dialogItemPadding = const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+    this.dialogItemPadding =
+        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
     this.searchPadding = const EdgeInsets.symmetric(horizontal: 24),
     Key? key,
   }) : super(key: key);
@@ -171,12 +173,12 @@ class CountryCodePickerState extends State<CountryCodePicker> {
     Widget internalWidget;
     if (widget.builder != null) {
       internalWidget = InkWell(
-        onTap: widget.enabled ? showCountryCodePickerDialog : null,
+        onTap: widget.enabled ? showCountryCodePickerBottomSheet : null,
         child: widget.builder!(selectedItem),
       );
     } else {
       internalWidget = TextButton(
-        onPressed: widget.enabled ? showCountryCodePickerDialog : null,
+        onPressed: widget.enabled ? showCountryCodePickerBottomSheet : null,
         child: Padding(
           padding: widget.padding,
           child: Flex(
@@ -294,13 +296,14 @@ class CountryCodePickerState extends State<CountryCodePicker> {
         .toList();
   }
 
-  void showCountryCodePickerDialog() async {
-    final item = await showDialog(
-      barrierColor: widget.barrierColor ?? Colors.grey.withOpacity(0.5),
+  void showCountryCodePickerBottomSheet() async {
+    final item = await showCupertinoModalPopup(
       context: context,
       builder: (context) => Center(
-        child: Dialog(
-          child: SelectionDialog(
+        child: AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          content: SelectionDialog(
             elements,
             favoriteElements,
             showCountryOnly: widget.showCountryOnly,
